@@ -1,0 +1,58 @@
+<%- include("partials/header.ejs") %>
+
+<h1>welcome to our web blog!</h1>
+
+<h4>Hey, it's <%= dayType %>, <%= advice %></h4>
+
+<p>
+  <% if (locals.numberOfLetters) { %>
+    <h3>There are <%= numberOfLetters %> letters in your name.</h3>
+  <% } else { %>
+    <h4>Add a post below:</h4>
+  <% } %>
+  
+  <form action="/submit" method="POST">
+    <textarea name="postFromTextArea" placeholder="my text" rows="4" cols="50"></textarea>
+    <input type="submit" value="SUBMIT">
+  </form>
+</p>
+
+<div id="posts">
+  <% posts.forEach(function(post, index) { %>
+    <div class="post" data-index="<%= index %>">
+      <p>
+        <strong><%= post.date %>:</strong> <span class="post-text"><%= post.editedDate %></span>
+      </p>
+      <div class="post-grid">
+
+        <form method="POST">
+          <input type="hidden" name="index" value="<%= index %>">
+
+        <div class="edit-area">
+          <% if (post.isEditing) { %>
+            <textarea name="editedText" class="edit-textarea"><%= post.text %></textarea>
+          <% } else { %>
+            <div class="edit-div"><%= post.text %></div>
+          <% } %>
+        </div>
+
+        <div class="post-actions">
+            <% if (post.isEditing) { %>
+              <button type="submit" formaction="/save-post" class="save-post">💾</button>
+            <% } else { %>
+              <button type="submit" formaction="/edit-post" class="edit-post">✏️</button>
+              <button type="submit" formaction="/delete-post" class="delete-post">🗑️</button>
+            <% } %>
+          
+        </div>
+      </form>
+      </div>
+
+      <% if (post.editedDate) { %>
+        <p class="edited-date">edited: <%= post.editedDate %></p>
+      <% } %>
+    </div>
+  <% }); %>
+</div>
+
+<%- include("partials/footer.ejs") %>
